@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import train from '../public/rail.png'
+import bus from '../public/bus-image.png'
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+
 function Login() {
 
 
@@ -71,6 +72,9 @@ function Login() {
                 alert("Role for this user is not found")
             }
         }
+        else{
+            alert('User not found with these credentials.')
+        }
 
     }
 
@@ -81,7 +85,7 @@ function Login() {
 
                 {/* Image Section */}
                 <div className="md:w-1/2 h-64 md:h-auto">
-                    <img src={train} alt="Train background" className="w-[80%] h-[80%] object-cover m-4"/>
+                    <img src={bus} alt="Train background" className="w-[80%] h-[80%] object-cover m-4"/>
                 </div>
 
                 {/* Form Section */}

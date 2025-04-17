@@ -1,11 +1,12 @@
 package com.app.backend.repository;
 
-import com.app.backend.model.User;
+import com.app.backend.model.OTP;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends MongoRepository<User, ObjectId> {
-    User findByEmail(String email);
+public interface OTPRepository extends MongoRepository<OTP, ObjectId> {
+    OTP findByEmail(String email);
+    void deleteByEmail(String email);
 }

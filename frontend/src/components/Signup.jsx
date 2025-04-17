@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import train from '../public/rail.png'
+import bus from '../public/bus-image.png'
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import user from "./User.jsx";
+
 function Signup() {
     let navigate = useNavigate()
     let [otpverified,setOtpverified] = useState(false)
     let [otpGenerated,setOtpGenerated] = useState(false)
+    let [otp,setOtp] = useState('');
     let [userDetails,setUserDetails] = useState({
         email:"",
         password:"",
@@ -41,21 +44,61 @@ function Signup() {
 
 
 
-    function generateOTP(){
+    async function generateOTP(e){
+        e.preventDefault()
         if(userDetails.email===""){
             alert("Email should not be empty")
         }
         else{
-            alert("OTP sent")
+            let formData = new FormData()
+            formData.append('email',userDetails.email)
+            let response = await axios.post('http://localhost:8080/generateOTP',formData)
+            if(response.data===true){
+                alert("OTP sent")
+                setOtpGenerated(true)
+            }
+            else{
+                alert('Error in sending OTP to the given email. Email may already exists')
+            }
         }
     }
 
-    function verifyOTP(){
-        console.log("otp verified")
+    async function verifyOTP(e){
+        e.preventDefault()
+        let formData = new FormData()
+        formData.append('email',userDetails.email)
+        formData.append('otp',otp)
+
+        let response = await axios.post('http://localhost:8080/verifyOTP',formData)
+
+        if(response.data===true){
+            setOtpverified(true)
+        }
+        else{
+            alert('Enter OTP is wrong')
+        }
+
+        alert('OTP verified')
     }
 
-    async function handleSignup(){
+    async function handleSignup(e){
+        e.preventDefault()
+        let response = await axios.post('http://localhost:8080/register',userDetails)
+        console.log(response.data)
+        console.log(userDetails)
+        if(response.data!==null){
+            localStorage.setItem('token',response.data.token)
 
+            if(userDetails.role==='USER'){
+                navigate('/user')
+            }
+            else if(userDetails.role==='ADMIN'){
+                navigate('/admin')
+            }
+            else{
+                alert('Error in getting role')
+            }
+        }
     }
 
 
@@ -65,7 +108,7 @@ function Signup() {
 
                 {/* Image Section */}
                 <div className="md:w-1/2 h-64 md:h-auto">
-                    <img src={train} alt="Train background" className="w-[80%] h-[80%] object-cover m-4"/>
+                    <img src={bus} alt="Train background" className="w-[80%] h-[80%] object-cover m-4"/>
                 </div>
 
                 {/* Form Section */}
@@ -81,7 +124,7 @@ function Signup() {
                         </div>
 
                         {/*generate otp button*/}
-                        <button onClick={generateOTP} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200">
+                        <button onClick={(e)=>generateOTP(e)} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200">
                             Generate OTP
                         </button>
 
@@ -89,12 +132,13 @@ function Signup() {
                         <div className={otpGenerated?'block':'hidden'}>
                             <div>
                                 <label className="block text-gray-600">OTP</label>
-                                <input type="email" placeholder="" className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                                <input onChange={(e)=>setOtp(e.target.value)} type="email" placeholder="" className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                             </div>
-                            <button onClick={verifyOTP} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200">
+                            <button onClick={(e)=>verifyOTP(e)} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200">
                                 Verify OTP
                             </button>
                         </div>
+
 
                         {/*details section password, role and name */}
                         <div className={otpverified?'block':'hidden'}>
@@ -110,16 +154,20 @@ function Signup() {
 
                             <div>
                                 <label className="block text-gray-600">Role</label>
-                                <select onChange={(e) => { setUserDetails({ ...userDetails, role: e.target.value }) }} value={userDetails.role} className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="user">User</option>
-                                    <option value="admin">Admin</option>
+                                <select onChange={(e) => {console.log(e.target.value); setUserDetails({ ...userDetails, role: e.target.value }) }} value={userDetails.role} className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="" disabled hidden>
+                                        Select a role
+                                    </option>
+                                    <option value="USER">User</option>
+                                    <option value="ADMIN">Admin</option>
                                 </select>
                             </div>
 
-                            <button onClick={()=>handleSignup()} type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200">
+                            <button onClick={(e)=>handleSignup(e)} type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200">
                                 Sign Up
                             </button>
                         </div>
+
 
                     </form>
 
