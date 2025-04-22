@@ -113,7 +113,7 @@ function Signup() {
 
                 {/* Form Section */}
                 <div className="md:w-1/2 p-8 flex flex-col justify-center">
-                    <h2 className="text-3xl font-bold mb-6 text-gray-800">Create Your Account 🚉</h2>
+                    <h2 className="text-3xl font-bold mb-6 text-gray-800">Create Your Account</h2>
 
                     <form className="space-y-4">
 

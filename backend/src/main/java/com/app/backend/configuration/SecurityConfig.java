@@ -28,16 +28,20 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        try{
+            http.csrf(AbstractHttpConfigurer::disable);
+            http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+            http.authorizeHttpRequests(request -> request.requestMatchers("/generateOTP","/verifyOTP","/login","/register","/signup","/systemAdmin/*").permitAll().anyRequest().authenticated());
+            http.httpBasic(Customizer.withDefaults());
+            http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-        http.authorizeHttpRequests(request -> request.requestMatchers("/generateOTP","/verifyOTP","/login","/register","/signup","/systemAdmin/*").permitAll().anyRequest().authenticated());
-        http.httpBasic(Customizer.withDefaults());
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            return http.build();
+        } catch (Exception e) {
+            throw new RuntimeException("Error in verifying JWT");
+        }
 
-        return http.build();
     }
 
 

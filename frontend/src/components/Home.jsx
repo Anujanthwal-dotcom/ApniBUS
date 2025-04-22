@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react'
-import bus from '../public/bus-school.png'
 import busTravel from '../public/2209_w015_n003_974b_p15_974.jpg'
 import passenger from '../public/8574950.jpg'
 import travel from '../public/9372541.jpg'
@@ -8,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 function Home() {
-    let [currentBusImg,setCurrentBusImg] = useState(0);
+
     let navigate = useNavigate()
 
     let token = localStorage.getItem('token')
@@ -38,26 +37,23 @@ function Home() {
 
     },[navigate, token])
 
-    function carousal(dir){
-        let length = busImages.length
-        if(dir==='left'){
-            setCurrentBusImg(currentBusImg > 0?currentBusImg-1:length-1)
-        }
-        else{
-            setCurrentBusImg(currentBusImg<length-1?currentBusImg+1:0)
-        }
-    }
 
     return (
         <div>
             {/*nav section*/}
-            <div className={"h-[100px] flex flex-row items-center rounded-b-lg shadow-md justify-center space-x-[80%] p-10"}>
+            <div className={"h-[100px] flex flex-row items-center rounded-b-lg shadow-md justify-center space-x-[80%] px-50"}>
                 <div className={"flex flex-row items-center"}>
-                    <img src={bus} alt={'bus image'} height={60} width={60} className={`m-2`}/>
-                    <h1 className={`text-3xl font-bold`}>ApniBUS</h1>
+
+                    <h1
+                        className="flex items-centerfont-sans font-extrabold tracking-tight text-3xl sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-yellow-400">
+                        ApniBUS
+                    </h1>
                 </div>
                 <div className="m-4">
-                    <button onClick={()=>navigate('/login')} className="text-xl font-semibold px-6 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition duration-200 shadow-md">
+                    <button
+                        onClick={() => navigate('/login')}
+                        className="text-lg font-semibold px-10 py-2 rounded-xl text-neutral-500  hover:text-neutral-600 hover:bg-neutral-200 transition-colors duration-300 focus:outline-none"
+                    >
                         Login
                     </button>
                 </div>
@@ -66,49 +62,39 @@ function Home() {
             <div>
                 <div className="flex items-center justify-center">
                     <div
-                        className="w-full h-[500px]  bg-cover bg-center items-center justify-center"
+                        className="w-full h-[500px] bg-cover bg-center flex items-center"
                         style={{
-                            // Adjust the rgba values for your desired overlay darkness
                             backgroundImage: `url(${busTravel})`,
-                            backgroundSize: '100% 100%' // Keeps the image corners pinned
+                            backgroundSize: '100% 100%',
                         }}
                     >
-                        <div className="relative z-10 flex items-center justify-center h-full w-full px-4">
-                            <div className="flex w-full max-w-6xl shadow-2xl rounded-2xl overflow-hidden">
-
-                                {/* Search Fields */}
-                                <div className="flex flex-col sm:flex-row gap-4 w-full bg-white bg-opacity-95 p-6 sm:p-4 sm:gap-2 flex-1">
-
-                                    {/* From Input */}
-                                    <input
-                                        type="text"
-                                        placeholder="From"
-                                        className="w-[25%] sm:w-1/3 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-
-                                    {/* To Input */}
-                                    <input
-                                        type="text"
-                                        placeholder="To"
-                                        className="w-[25%] sm:w-1/3 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400"
-                                    />
-
-                                    {/* Date Picker */}
-                                    <input
-                                        type="date"
-                                        className="w-[25%] sm:w-1/3 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
-                                    />
-                                </div>
-
-                                {/* Search Button */}
-                                <button className="w-[25%] bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 sm:py-0 sm:px-6 transition-all duration-300 rounded-none sm:rounded-r-2xl">
-                                    Search
+                        <div className="relative z-10 w-full max-w-lg pl-6 sm:pl-12">
+                            <div className="bg-white/20 backdrop-blur-md rounded-3xl shadow-[0_12px_48px_rgba(0,0,0,0.2)] border border-white/10 ring-1 ring-white/20 p-6 sm:p-10 text-left space-y-5 transition-all duration-300 ease-in-out">
+                                <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
+                                    Catch Your Ride, Your Way
+                                </h1>
+                                <p className="text-gray-900/90 text-base sm:text-lg leading-relaxed">
+                                    Plan smarter. Travel smoother. Whether it’s your everyday route or a spontaneous trip, we make it effortless.
+                                </p>
+                                <button onClick={()=>{navigate('/signup')}} className="inline-flex items-center bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white font-medium px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+                                    <span>Get Started</span>
+                                    <svg
+                                        className="w-5 h-5 ml-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path d="M5 12h14M13 5l7 7-7 7" />
+                                    </svg>
                                 </button>
                             </div>
                         </div>
-
-
                     </div>
+
+
                 </div>
 
                 <div className="p-8 bg-gray-100 min-h-screen flex justify-center">
